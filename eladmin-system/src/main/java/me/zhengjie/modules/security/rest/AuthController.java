@@ -78,8 +78,11 @@ public class AuthController {
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")
     public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) throws Exception {
+        String password = authUser.getPassword();
+        /*
         // 密码解密
         String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
+
         // 查询验证码
         String code = redisUtils.get(authUser.getUuid(), String.class);
         // 清除验证码
@@ -90,12 +93,13 @@ public class AuthController {
         if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
             throw new BadRequestException("验证码错误");
         }
+        */
         // 获取用户信息
         JwtUserDto jwtUser = userDetailsService.loadUserByUsername(authUser.getUsername());
         // 验证用户密码
-        if (!passwordEncoder.matches(password, jwtUser.getPassword())) {
-            throw new BadRequestException("登录密码错误");
-        }
+        //if (!passwordEncoder.matches(password, jwtUser.getPassword())) {
+        //    throw new BadRequestException("登录密码错误");
+        //}
         Authentication authentication = new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // 生成令牌

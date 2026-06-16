@@ -18,6 +18,7 @@ package me.zhengjie.utils;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
+import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.exception.BadRequestException;
@@ -351,6 +352,22 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             log.error(e.getMessage(), e);
         }
         return null;
+    }
+
+    /**
+     * 读取 Excel 文件，返回 List<Map<String, Object>>
+     * @param file Excel 文件
+     * @return 数据列表
+     */
+    public static List<Map<String, Object>> importExcel(MultipartFile file) {
+        try {
+            // 使用 getReader 获取 ExcelReader，然后调用 readAll 读取所有数据
+            ExcelReader reader = ExcelUtil.getReader(file.getInputStream());
+            return reader.readAll();
+        } catch (IOException e) {
+            log.error("读取Excel失败", e);
+            throw new RuntimeException("读取Excel文件失败", e);
+        }
     }
 
     /**
